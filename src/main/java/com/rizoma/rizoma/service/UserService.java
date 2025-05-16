@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.rizoma.rizoma.model.User;
 
 import com.rizoma.rizoma.repository.UserRepository;
-import java.util.Optional;
+import java.util.Optional; 
 
 @Service
 public class UserService {
