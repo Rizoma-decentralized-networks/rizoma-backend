@@ -11,16 +11,23 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;    
 
 @Entity
 @Table(name = "marks")
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of = "idMark")
+
 public class Mark {
 
+ 
     @Id
     @SequenceGenerator(name = "mark_id_sequence", sequenceName = "mark_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mark_id_sequence")
-    private Integer id;
+    private Integer idMark;
 
     @Column
     @NotBlank(message = "[ERROR!] The title field cannot be empty")
@@ -55,5 +62,7 @@ public class Mark {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+ 
 
 }

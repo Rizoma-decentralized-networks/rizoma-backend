@@ -22,13 +22,13 @@ import java.util.List;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "userId")
 
 public class User {
     @Id
     @SequenceGenerator(name = "user_id_sequence", sequenceName = "user_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_sequence")
-    private Integer id;
+    private Integer userId;
 
     @Column
     @NotBlank(message = "[ERROR!] Name camp is required and cannot be empty")

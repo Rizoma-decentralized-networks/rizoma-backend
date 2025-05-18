@@ -18,12 +18,12 @@ import java.util.List;
 @Table(name = "categories")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "idCategory")
 public class Category {
     @Id
     @SequenceGenerator(name = "category_id_sequence", sequenceName = "category_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_id_sequence")
-    private Integer id;
+    private Integer idCategory;
 
     @Column
     private String category;

@@ -18,13 +18,13 @@ import java.util.List;
 @Table(name = "tags")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "idTag")
 public class Tag {
-    
+
     @Id
     @SequenceGenerator(name = "tag_id_sequence", sequenceName = "tag_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tag_id_sequence")
-    private Integer id;
+    private Integer idTag;
 
     @Column
     private String tag;
