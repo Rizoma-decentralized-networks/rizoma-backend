@@ -1,4 +1,5 @@
 package com.rizoma.rizoma.model;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_mark")
+
 
 public class Mark {
 
