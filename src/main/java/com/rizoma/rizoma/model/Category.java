@@ -23,5 +23,5 @@ public class Category {
     private Integer id;
 
     @Column
-    private String nameCategory;
+    private String category;
 }
