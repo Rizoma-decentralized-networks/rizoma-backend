@@ -29,9 +29,13 @@ public class MarkController {
         this.markService = markService;
     }
 
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<Object> createMark(@PathVariable Integer userId, @Valid @RequestBody Mark mark) {
-        Mark createdMark = markService.createMark(mark, userId);
+    @PostMapping("/user/{id_user}")
+    public ResponseEntity<Object> createMark(@PathVariable Integer id_user, @Valid @RequestBody Mark mark) {
+        if (mark.getCategory() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("The category cannot be null.");
+        } 
+        Mark createdMark = markService.createMark(mark, id_user);
         if (createdMark == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Could not create mark. User or category not found.");
@@ -39,9 +43,9 @@ public class MarkController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMark);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getMarkById(@PathVariable Integer id) {
-        return this.markService.getMarkById(id);
+    @GetMapping("/{id_mark}")
+    public ResponseEntity<Object> getMarkById(@PathVariable Integer id_mark ) {
+        return this.markService.getMarkById(id_mark);
     }
 
     @GetMapping
@@ -49,13 +53,13 @@ public class MarkController {
         return markService.getAllMarks();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> updateMark(@PathVariable Integer id, @RequestBody Mark updatedMark) {
-        return this.markService.updateMark(id, updatedMark);
+    @PutMapping("/{id_mark}")
+    public ResponseEntity<Object> updateMark(@PathVariable Integer id_mark, @RequestBody Mark updatedMark) {
+        return this.markService.updateMark(id_mark, updatedMark);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteById(@PathVariable Integer id) {
-        return this.markService.deleteById(id);
+    @DeleteMapping("/{id_mark}")
+    public ResponseEntity<Object> deleteById(@PathVariable Integer id_mark) {
+        return this.markService.deleteById(id_mark);
     }
 }   

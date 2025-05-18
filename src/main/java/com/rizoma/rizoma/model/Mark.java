@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "marks")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "idMark")
+@EqualsAndHashCode(of = "id_mark")
 
 public class Mark {
 
@@ -27,7 +27,7 @@ public class Mark {
     @Id
     @SequenceGenerator(name = "mark_id_sequence", sequenceName = "mark_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mark_id_sequence")
-    private Integer idMark;
+    private Integer id_mark;
 
     @Column
     @NotBlank(message = "[ERROR!] The title field cannot be empty")
@@ -52,15 +52,15 @@ public class Mark {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "id_user", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "tag_id", nullable = false)
+    @JoinColumn(name = "id_tag", nullable = false)
     private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "id_category", nullable = false)
     private Category category;
 
  

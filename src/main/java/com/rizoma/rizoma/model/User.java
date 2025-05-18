@@ -22,18 +22,18 @@ import java.util.List;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "userId")
+@EqualsAndHashCode(of = "id_user")
 
 public class User {
     @Id
     @SequenceGenerator(name = "user_id_sequence", sequenceName = "user_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_sequence")
-    private Integer userId;
+    private Integer id_user;
 
     @Column
     @NotBlank(message = "[ERROR!] Name camp is required and cannot be empty")
     @Pattern(regexp = "^[^\\/:*?\\\"<>|]+$", message = "[ERROR!] No está permitido el uso de caracteres especiales")
-    @Size(max = 20, message = "[ERROR!] Maximum of 20 characters allowed in this field")
+    @Size(max = 20, min = 3, message = "[ERROR!] Minimum of 3 characters and maximum of 20 characters allowed in this field")
     private String username;
 
     @Column

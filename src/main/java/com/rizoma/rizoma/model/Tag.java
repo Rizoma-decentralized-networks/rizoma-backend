@@ -13,20 +13,26 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import java.util.List;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "tags")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "idTag")
+@EqualsAndHashCode(of = "id_tag")
 public class Tag {
 
     @Id
     @SequenceGenerator(name = "tag_id_sequence", sequenceName = "tag_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tag_id_sequence")
-    private Integer idTag;
+    private Integer id_tag;
 
     @Column
+    @NotBlank(message = "[ERROR!] The tag field cannot be empty")
+    @Size(min = 3, max = 20, message = "[ERROR!] Minimum of 3 and maximum of 20 characters allowed in this field")
+    @Pattern(regexp = "^[^\\/*<>|]+$", message = "[ERROR!] Special characters are not allowed")
     private String tag;
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
