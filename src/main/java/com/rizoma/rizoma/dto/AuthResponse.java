@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AuthResponse {
-    private String token; // por ahora, puedes devolver un string fijo como prueba
+    private String token;
     private UserSummaryDTO user;
 }
