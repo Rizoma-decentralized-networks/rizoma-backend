@@ -13,6 +13,7 @@ import com.rizoma.rizoma.model.User;
 import com.rizoma.rizoma.repository.MarkRepository;
 import com.rizoma.rizoma.repository.UserRepository;
 
+
 @Service
 public class MarkService {
 

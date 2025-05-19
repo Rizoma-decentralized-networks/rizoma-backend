@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "categories")
 @Data
@@ -28,6 +28,7 @@ public class Category {
     @Column
     private String category;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mark> marks;
 }
