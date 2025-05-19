@@ -18,13 +18,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "tags")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "idTag")
+@EqualsAndHashCode(of = "tagId")
 public class Tag {
 
     @Id
     @SequenceGenerator(name = "tag_id_sequence", sequenceName = "tag_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tag_id_sequence")
-    private Integer idTag;
+    private Integer tagId;
 
     @Column
     private String tag;

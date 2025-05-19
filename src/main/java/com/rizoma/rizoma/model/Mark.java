@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "marks")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "idMark")
+@EqualsAndHashCode(of = "markId")
 
 public class Mark {
 
@@ -27,7 +27,7 @@ public class Mark {
     @Id
     @SequenceGenerator(name = "mark_id_sequence", sequenceName = "mark_id_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mark_id_sequence")
-    private Integer idMark;
+    private Integer markId;
 
     @Column
     @NotBlank(message = "[ERROR!] The title field cannot be empty")
@@ -37,7 +37,7 @@ public class Mark {
 
     @Column
     @NotBlank(message = "[ERROR!] The content field cannot be empty")
-    @Size(min = 50, max = 2000, message = "[ERROR!] Minimum of 50 and maximum of 2000 characters allowed in this field")
+    @Size(min = 10, max = 2000, message = "[ERROR!] Minimum of 10 and maximum of 2000 characters allowed in this field")
     @Pattern(regexp = "^[^\\/*<>|]+$", message = "[ERROR!] Special characters are not allowed")
     private String description;
 
