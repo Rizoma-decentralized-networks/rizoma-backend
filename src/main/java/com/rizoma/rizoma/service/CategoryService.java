@@ -18,7 +18,6 @@ public class CategoryService {
     public ResponseEntity<Object> createCategory(Category category) {
 
         if(categoryRepository.findByCategory(category.getCategory()) != null){
-          //  throw new CategoryAlreadyExistsException("[ERROR]: Ya existe una categoria con ese nombre");
         }
 
         return new ResponseEntity<>(categoryRepository.save(category), HttpStatus.CREATED);
