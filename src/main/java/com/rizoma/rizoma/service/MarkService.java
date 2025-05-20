@@ -2,7 +2,6 @@ package com.rizoma.rizoma.service;
 
 import java.util.Optional;
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,12 +11,14 @@ import com.rizoma.rizoma.model.Mark;
 import com.rizoma.rizoma.model.User;
 import com.rizoma.rizoma.repository.MarkRepository;
 import com.rizoma.rizoma.repository.UserRepository;
+
 import com.rizoma.rizoma.model.Category;
 import com.rizoma.rizoma.repository.CategoryRepository;
 import com.rizoma.rizoma.model.Tag;
 import com.rizoma.rizoma.repository.TagRepository;
+import com.rizoma.rizoma.dto.MarkDTO;
 import com.rizoma.rizoma.exception.DuplicateMarkException;
-
+import com.rizoma.rizoma.mapper.MarkMapper;
 
 @Service
 public class MarkService {
@@ -26,46 +27,83 @@ public class MarkService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
+    private final MarkMapper markMapper;
+    
 
     @Autowired
-    public MarkService(MarkRepository markRepository, UserRepository userRepository, CategoryRepository categoryRepository, TagRepository tagRepository) {
+    public MarkService(MarkRepository markRepository, 
+                    UserRepository userRepository, 
+                    CategoryRepository categoryRepository, 
+                    TagRepository tagRepository,
+                    MarkMapper markMapper) {
         this.markRepository = markRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
+        this.markMapper = markMapper;
     }
 
     @Transactional
-    public Mark createMark(Mark mark, Integer userId) {
+   
+    public Mark createMarkFromDTO(MarkDTO dto, Integer userId) {
         Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            return null;
-        }
+        if (userOptional.isEmpty()) return null;
 
-        Optional<Category> categoryOptional = categoryRepository.findById(mark.getCategory().getCategoryId());
-        Optional<Tag> tagOptional = tagRepository.findById(mark.getTag().getTagId());
-        
-        if (categoryOptional.isEmpty() || tagOptional.isEmpty()) {
-            return null;
-        }
-        
+        Optional<Category> categoryOptional = categoryRepository.findById(
+            dto.getCategory().getIdCategory()
+        );
+        Optional<Tag> tagOptional = tagRepository.findById(
+            dto.getTag().getIdTag()
+        );
+
+        if (categoryOptional.isEmpty() || tagOptional.isEmpty()) return null;
+
         Optional<Mark> existingMark = markRepository.findByTitleAndLocation(
-            mark.getTitle(), mark.getLocation());
-            
+            dto.getTitle(), dto.getLocation()
+        );
+
         if (existingMark.isPresent()) {
             throw new DuplicateMarkException("A marker with this title and location already exists");
         }
-        
-        mark.setUser(userOptional.get());
-        mark.setCategory(categoryOptional.get());
-        mark.setTag(tagOptional.get());
 
+        Mark mark = markMapper.toEntity(dto, categoryOptional.get(), tagOptional.get());
+        mark.setUser(userOptional.get());
         return markRepository.save(mark);
     }
+
 
     public List<Mark> getAllMarks() {
         return this.markRepository.findAll();
     }
+
+    public Mark findMarkById(Integer id) {
+        return this.markRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public Mark updateMark(Integer id, MarkDTO dto) {
+        Optional<Mark> markOptional = markRepository.findById(id);
+        if (markOptional.isEmpty()) return null;
+
+        Mark existingMark = markOptional.get();
+
+        existingMark.setTitle(dto.getTitle());
+        existingMark.setDescription(dto.getDescription());
+        existingMark.setLocation(dto.getLocation());
+        existingMark.setImageUrl(dto.getImageUrl());
+        
+        if (dto.getCategory() != null) {
+            categoryRepository.findById(dto.getCategory().getIdCategory())
+                .ifPresent(existingMark::setCategory);
+        }
+        if (dto.getTag() != null) {
+            tagRepository.findById(dto.getTag().getIdTag())
+                .ifPresent(existingMark::setTag);
+        }
+
+        return markRepository.save(existingMark);
+    }
+
 
     public ResponseEntity<Object> getMarkById(Integer id) {
         Optional<Mark> markOptional = markRepository.findById(id);
@@ -76,32 +114,12 @@ public class MarkService {
         return ResponseEntity.ok(mark);
     }
 
-    public ResponseEntity<Object> updateMark(Integer id, Mark updateMark) {
-        Optional<Mark> markOptional = markRepository.findById(id);
-
-        if (!markOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        Mark existingMark = markOptional.get();
-
-        existingMark.setTitle(updateMark.getTitle());
-        existingMark.setDescription(updateMark.getDescription());
-        markRepository.save(existingMark);
-            return ResponseEntity.ok(existingMark);
-    }
-
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ResponseEntity<Object> deleteById(Integer markId) {
+    public boolean deleteById(Integer markId) {
         Optional<Mark> markOptional = markRepository.findById(markId);
+        if (markOptional.isEmpty()) return false;
 
-        if (!markOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Mark mark = markOptional.get();
-
-        markRepository.deleteById(mark.getMarkId());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        markRepository.deleteById(markId);
+        return true;
     }
-
 }

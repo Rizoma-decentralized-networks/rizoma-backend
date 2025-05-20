@@ -5,6 +5,8 @@ import com.rizoma.rizoma.model.Mark;
 import com.rizoma.rizoma.service.MarkService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.rizoma.rizoma.mapper.MarkMapper;
+import com.rizoma.rizoma.dto.MarkDTO;
 
 
 @RestController
@@ -34,7 +38,7 @@ public class MarkController {
 
     @PostMapping("/user/{userId}")
     public ResponseEntity<Object> createMark(@PathVariable Integer userId, @Valid @RequestBody MarkDTO markDTO) {
-        Mark createdMark = markService.createMark(markDTO, userId);
+        Mark createdMark = markService.createMarkFromDTO(markDTO, userId);
         if (createdMark == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Could not create mark. User or category not found.");
@@ -44,7 +48,7 @@ public class MarkController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getMarkById(@PathVariable Integer id) {
-        Mark mark = markService.getMarkById(id);
+        Mark mark = markService.findMarkById(id);
         if (mark == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mark not found");
         }
@@ -61,7 +65,7 @@ public class MarkController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateMark(@PathVariable Integer id, @RequestBody MarkDTO updatedMarkDTO) {
-        Mark updatedMark = this.markService.updateMark(id, updatedMarkDTO);
+        Mark updatedMark = markService.updateMark(id, updatedMarkDTO);
         if (updatedMark == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mark not found");
         }

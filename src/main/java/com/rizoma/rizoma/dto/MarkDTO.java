@@ -15,5 +15,5 @@ public class MarkDTO {
     private String imageUrl;
     private CategoryDTO category;
     private TagDTO tag;
-    private UserDTO user;
+   
 }

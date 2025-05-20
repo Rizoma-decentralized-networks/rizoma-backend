@@ -32,7 +32,7 @@ public class User {
 
     @Column
     @NotBlank(message = "[ERROR!] Name camp is required and cannot be empty")
-    @Pattern(regexp = "^[^\\/:*?\\\"<>|]+$", message = "[ERROR!] No está permitido el uso de caracteres especiales")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "[ERROR!] Only letters, numbers, hyphens and underscores are allowed")
     @Size(max = 20, message = "[ERROR!] Maximum of 20 characters allowed in this field")
     private String username;
 
