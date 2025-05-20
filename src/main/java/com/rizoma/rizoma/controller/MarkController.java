@@ -24,39 +24,56 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MarkController {
 
     private final MarkService markService;
+    private final MarkMapper markMapper;
 
     @Autowired
-    public MarkController(MarkService markService) {
+    public MarkController(MarkService markService, MarkMapper markMapper) {
         this.markService = markService;
+        this.markMapper = markMapper;
     }
 
     @PostMapping("/user/{userId}")
-    public ResponseEntity<Object> createMark(@PathVariable Integer userId, @Valid @RequestBody Mark mark) {
-        Mark createdMark = markService.createMark(mark, userId);
+    public ResponseEntity<Object> createMark(@PathVariable Integer userId, @Valid @RequestBody MarkDTO markDTO) {
+        Mark createdMark = markService.createMark(markDTO, userId);
         if (createdMark == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Could not create mark. User or category not found.");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdMark);
+        return ResponseEntity.status(HttpStatus.CREATED).body(markMapper.toDTO(createdMark));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getMarkById(@PathVariable Integer id) {
-        return this.markService.getMarkById(id);
+        Mark mark = markService.getMarkById(id);
+        if (mark == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mark not found");
+        }
+        return ResponseEntity.ok(markMapper.toDTO(mark));
     }
 
     @GetMapping
-    public List<Mark> getAllMark() {
-        return markService.getAllMarks();
+    public List<MarkDTO> getAllMark() {
+        List<Mark> marks = markService.getAllMarks();
+        return marks.stream()
+            .map(markMapper::toDTO)
+            .collect(Collectors.toList());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateMark(@PathVariable Integer id, @RequestBody Mark updatedMark) {
-        return this.markService.updateMark(id, updatedMark);
+    public ResponseEntity<Object> updateMark(@PathVariable Integer id, @RequestBody MarkDTO updatedMarkDTO) {
+        Mark updatedMark = this.markService.updateMark(id, updatedMarkDTO);
+        if (updatedMark == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mark not found");
+        }
+        return ResponseEntity.ok(markMapper.toDTO(updatedMark));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable Integer id) {
-        return this.markService.deleteById(id);
+        boolean deleted = this.markService.deleteById(id);
+        if (!deleted) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mark not found");
+        }
+        return ResponseEntity.noContent().build();
     }
 }   
