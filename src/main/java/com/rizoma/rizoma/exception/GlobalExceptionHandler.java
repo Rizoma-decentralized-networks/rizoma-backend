@@ -5,17 +5,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import java.util.Date;
 import java.util.HashMap;
-
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -63,21 +64,27 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFound(ResourceNotFoundException ex) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "error");
-        response.put("message", ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(
+            ResourceNotFoundException exception, WebRequest request) {
+        
+        ErrorDetails errorDetails = new ErrorDetails(
+                new Date(),
+                exception.getMessage(),
+                request.getDescription(false));
+        
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAllExceptions(Exception ex) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "error");
-        response.put("message", "An error occurred on the server");
-
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorDetails> handleGlobalException(
+            Exception exception, WebRequest request) {
+        
+        ErrorDetails errorDetails = new ErrorDetails(
+                new Date(),
+                exception.getMessage(),
+                request.getDescription(false));
+        
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(DuplicateMarkException.class)
@@ -97,14 +104,24 @@ public class GlobalExceptionHandler {
             
             String message = violation.getMessage();
             
-            String userFriendlyMessage = "El campo '" + fieldName + "' " + message;
+            String userFriendlyMessage = "The field '" + fieldName + "' " + message;
             errors.put(fieldName, userFriendlyMessage);
         });
         
         response.put("status", "error");
-        response.put("message", "Por favor, corrija los siguientes errores:");
+        response.put("message", "Please, correct the following errors:");
         response.put("errors", errors);
         
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<Object> handleDuplicateUserException(DuplicateUserException ex) {
+        Map<String, Object> response = new HashMap<>();
+        
+        response.put("status", "error");
+        response.put("message", "A user with this email already exists");
+        
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 }

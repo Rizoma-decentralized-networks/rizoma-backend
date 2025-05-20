@@ -38,7 +38,7 @@ public class User {
 
     @Column
     @NotBlank(message = "[ERROR!] Password camp is required and cannot be empty")
-    @Size(max = 20, message = "[ERROR!] Maximum of 20 characters allowed in this field")
+    @Size(max = 20, min = 8, message = "[ERROR!] Maximum of 20 characters allowed in this field")
     private String password;
 
     @Column

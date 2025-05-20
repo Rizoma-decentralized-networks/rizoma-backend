@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 @RestController
 @RequestMapping("/api/v1/marks")
 @CrossOrigin(origins = "http://localhost:5173")

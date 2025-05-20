@@ -6,6 +6,7 @@ import com.rizoma.rizoma.model.User;
 
 import com.rizoma.rizoma.repository.UserRepository;
 import java.util.Optional; 
+import com.rizoma.rizoma.exception.DuplicateUserException;
 
 @Service
 public class UserService {
@@ -18,7 +19,7 @@ public class UserService {
 
     public User createUser(User user) {
         if (userRepository.findByEmail(user.getEmail()) != null) {
-
+            throw new DuplicateUserException("Ya existe un usuario con el email: " + user.getEmail());
         }
         return userRepository.save(user);
     }

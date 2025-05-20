@@ -32,7 +32,7 @@ public class Mark {
     @Column
     @NotBlank(message = "[ERROR!] The title field cannot be empty")
     @Pattern(regexp = "^[\\p{L}\\p{N}\\s]+$", message = "[ERROR!] Special characters are not allowed")
-    @Size(max = 100, message = "[ERROR!] Maximum of 100 characters allowed in this field")
+    @Size(max = 100, min = 3, message = "[ERROR!] Maximum of 100 characters allowed in this field")
     private String title;
 
     @Column
