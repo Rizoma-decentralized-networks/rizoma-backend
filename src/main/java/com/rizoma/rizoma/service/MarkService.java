@@ -16,6 +16,7 @@ import com.rizoma.rizoma.model.Category;
 import com.rizoma.rizoma.repository.CategoryRepository;
 import com.rizoma.rizoma.model.Tag;
 import com.rizoma.rizoma.repository.TagRepository;
+import com.rizoma.rizoma.exception.DuplicateMarkException;
 
 
 @Service
@@ -41,12 +42,18 @@ public class MarkService {
             return null;
         }
 
-        // Cargar explícitamente la categoría y el tag completos
         Optional<Category> categoryOptional = categoryRepository.findById(mark.getCategory().getCategoryId());
         Optional<Tag> tagOptional = tagRepository.findById(mark.getTag().getTagId());
         
         if (categoryOptional.isEmpty() || tagOptional.isEmpty()) {
             return null;
+        }
+        
+        Optional<Mark> existingMark = markRepository.findByTitleAndLocation(
+            mark.getTitle(), mark.getLocation());
+            
+        if (existingMark.isPresent()) {
+            throw new DuplicateMarkException("A marker with this title and location already exists");
         }
         
         mark.setUser(userOptional.get());
