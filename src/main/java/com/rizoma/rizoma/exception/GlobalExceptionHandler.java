@@ -120,7 +120,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         
         response.put("status", "error");
-        response.put("message", "A user with this email already exists");
+        response.put("message", "duplicate data");
         
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
