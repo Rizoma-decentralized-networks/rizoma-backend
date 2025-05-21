@@ -44,19 +44,25 @@ public class MarkService {
     }
 
     @Transactional
-   
     public Mark createMarkFromDTO(MarkDTO dto, Integer userId) {
         Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) return null;
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
 
-        Optional<Category> categoryOptional = categoryRepository.findById(
-            dto.getCategory().getIdCategory()
-        );
-        Optional<Tag> tagOptional = tagRepository.findById(
-            dto.getTag().getIdTag()
-        );
+        if (dto.getCategory() == null || dto.getTag() == null) {
+            throw new IllegalArgumentException("Category and Tag IDs must not be null");
+        }
 
-        if (categoryOptional.isEmpty() || tagOptional.isEmpty()) return null;
+        Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategory());
+        if (categoryOptional.isEmpty()) {
+            throw new IllegalArgumentException("Category not found");
+        }
+
+        Optional<Tag> tagOptional = tagRepository.findById(dto.getTag());
+        if (tagOptional.isEmpty()) {
+            throw new IllegalArgumentException("Tag not found");
+        }
 
         Optional<Mark> existingMark = markRepository.findByTitleAndLocation(
             dto.getTitle(), dto.getLocation()
@@ -93,11 +99,11 @@ public class MarkService {
         existingMark.setImageUrl(dto.getImageUrl());
         
         if (dto.getCategory() != null) {
-            categoryRepository.findById(dto.getCategory().getIdCategory())
+            categoryRepository.findById(dto.getCategory())
                 .ifPresent(existingMark::setCategory);
         }
         if (dto.getTag() != null) {
-            tagRepository.findById(dto.getTag().getIdTag())
+            tagRepository.findById(dto.getTag())
                 .ifPresent(existingMark::setTag);
         }
 

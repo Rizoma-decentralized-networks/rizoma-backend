@@ -28,6 +28,7 @@ public class Tag {
 
     @Column
     private String tag;
+    
 
     @JsonIgnore
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)

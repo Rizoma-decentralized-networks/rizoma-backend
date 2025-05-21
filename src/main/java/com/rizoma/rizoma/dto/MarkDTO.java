@@ -13,7 +13,7 @@ public class MarkDTO {
     private String description;
     private String location;
     private String imageUrl;
-    private CategoryDTO category;
-    private TagDTO tag;
+    private Integer category;
+    private Integer tag;
    
 }

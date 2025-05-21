@@ -1,11 +1,11 @@
 package com.rizoma.rizoma.mapper;
 
 import com.rizoma.rizoma.dto.MarkDTO;
-import com.rizoma.rizoma.dto.CategoryDTO;
-import com.rizoma.rizoma.dto.TagDTO;
 import com.rizoma.rizoma.model.Mark;
 import com.rizoma.rizoma.model.Category;
 import com.rizoma.rizoma.model.Tag;
+import com.rizoma.rizoma.dto.CategoryDTO;
+import com.rizoma.rizoma.dto.TagDTO;
 import org.springframework.stereotype.Component;
 
 
@@ -16,21 +16,16 @@ public class MarkMapper {
     public MarkDTO toDTO(Mark mark) {
         if (mark == null) return null;
 
-        CategoryDTO categoryDTO = null;
-        if (mark.getCategory() != null) {
-            categoryDTO = new CategoryDTO(
-                mark.getCategory().getCategoryId(),
-                mark.getCategory().getCategory()
-            );
-        }
+        Category category = mark.getCategory();
+        Tag tag = mark.getTag();
 
-        TagDTO tagDTO = null;
-        if (mark.getTag() != null) {
-            tagDTO = new TagDTO(
-                mark.getTag().getTagId(),
-                mark.getTag().getTag()
-            );
-        }
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCategoryId(category.getCategoryId());
+        categoryDTO.setCategory(category.getCategory());
+
+        TagDTO tagDTO = new TagDTO();
+        tagDTO.setTagId(tag.getTagId());
+        tagDTO.setTag(tag.getTag());
 
         return new MarkDTO(
             mark.getMarkId(),
@@ -38,8 +33,8 @@ public class MarkMapper {
             mark.getDescription(),
             mark.getLocation(),
             mark.getImageUrl(),
-            categoryDTO,
-            tagDTO
+            categoryDTO.getCategoryId(),
+            tagDTO.getTagId()
         );
     }
 
