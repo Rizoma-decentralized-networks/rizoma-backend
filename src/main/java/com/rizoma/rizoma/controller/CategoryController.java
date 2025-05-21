@@ -31,7 +31,7 @@ public class CategoryController {
   public List<Category> getAllCategories() {
     return categoryService.getAllCategories();
   }
-
+ 
   @GetMapping("/{id}")
   public ResponseEntity<Category> getCategoryById(@PathVariable Integer id) {
     Category category = categoryService.getCategoryById(id);
