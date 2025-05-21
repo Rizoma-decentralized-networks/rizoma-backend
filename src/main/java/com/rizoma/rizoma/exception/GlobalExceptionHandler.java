@@ -87,8 +87,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(DuplicateMarkException.class)
-    public ResponseEntity<Object> handleDuplicateMarkException(DuplicateMarkException ex) {
+    @ExceptionHandler(DuplicateDataExcepction.class)
+    public ResponseEntity<Object> handleDuplicateMarkException(DuplicateDataExcepction ex) {
         return new ResponseEntity<>("A marker with these details already exists", HttpStatus.CONFLICT);
     }
 

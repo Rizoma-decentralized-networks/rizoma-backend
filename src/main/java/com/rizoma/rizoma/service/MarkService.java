@@ -17,7 +17,7 @@ import com.rizoma.rizoma.repository.CategoryRepository;
 import com.rizoma.rizoma.model.Tag;
 import com.rizoma.rizoma.repository.TagRepository;
 import com.rizoma.rizoma.dto.MarkDTO;
-import com.rizoma.rizoma.exception.DuplicateMarkException;
+import com.rizoma.rizoma.exception.DuplicateDataExcepction;
 import com.rizoma.rizoma.mapper.MarkMapper;
 
 @Service
@@ -69,7 +69,7 @@ public class MarkService {
         );
 
         if (existingMark.isPresent()) {
-            throw new DuplicateMarkException("A marker with this title and location already exists");
+            throw new DuplicateDataExcepction("A marker with this title and location already exists");
         }
 
         Mark mark = markMapper.toEntity(dto, categoryOptional.get(), tagOptional.get());
