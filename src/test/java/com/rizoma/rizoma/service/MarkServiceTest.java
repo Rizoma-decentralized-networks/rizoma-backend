@@ -10,10 +10,8 @@ import com.rizoma.rizoma.repository.TagRepository;
 import com.rizoma.rizoma.repository.CategoryRepository;
 import com.rizoma.rizoma.dto.MarkDTO;
 import com.rizoma.rizoma.mapper.MarkMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,11 +43,6 @@ public class MarkServiceTest {
 
 	@InjectMocks
 	private MarkService markService;
-
-	@BeforeEach
-	void setUp() {
-
-	}
 
 	@Test
 	void testCreateMark() {
